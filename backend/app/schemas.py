@@ -251,3 +251,15 @@ class GrpPartitionEntry(BaseModel):
     field_5: str | None = None  # 热点检测
     field_6: str | None = None  # 再平衡触发
     field_7: str | None = None  # 左右迁移
+
+class SlotReversalEntry(BaseModel):
+    """冲销对账批明细结构。"""
+
+    field_0: str | None = None  # 对账批号
+    field_1: str | None = None  # 目标批次
+    field_2: str | None = None  # 冲销槽位
+    field_3: str | None = None  # 回退条目
+    field_4: str | None = None  # 归档序号
+    field_5: str | None = None  # 发起原因
+    field_6: str | None = None  # 撤销标识
+    field_7: str | None = None  # 状态

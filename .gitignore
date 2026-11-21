@@ -119,3 +119,6 @@ desktop.ini
 !**/.env.example
 !.env.example
 # END S11 LOCAL SNAPSHOT EXCLUSIONS
+
+# 槽位更正回退归档（运行时生成）
+backend/data/

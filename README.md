@@ -67,6 +67,7 @@ npm run dev
 | 事件路由 | `event_router` | 路由规则 | 规则编号、事件类型、匹配条件 |
 | 历史回放 | `replay_batch` | 回放任务 | 任务编号、数据源、起始时间 |
 | 分组分区 | `grp_partition` | 分组策略 | 策略编号、关联流、分区键 |
+| 槽位更正回退 | `slot_reversal` | 冲销对账批 | 对账批号、目标批次、冲销槽位 |
 
 ## 约定
 
@@ -74,6 +75,26 @@ npm run dev
   `backend/app/routers/<模块>.py`，业务规则在 `backend/app/services/<模块>.py`。
 - 列表接口统一返回 `{ items, total, page, size }`，动作接口统一返回 `{ ok, message }`。
 - 状态流转只允许在 `app/services` 里改，路由层不做业务判断。
+
+## 槽位更正回退
+
+数据落盘过去只有成功回执，错批没有撤销记录。`slot_reversal` 模块为指标槽位引入
+版本化账本与槽位冲销对账批归档（`backend/app/services/slot_reversal.py`）：
+
+- 发布按请求标识幂等结算，并发重复请求只结算一次，成功回执同步返回实际已生效的槽位；
+- 冲销对账批根据已写入的指标值与各槽位有效版本产出，条目指到具体槽位和版本；
+- 提交记录不可变落盘（临时文件 + fsync + 原子改名），落库失败不修改持久结果；
+- 错批待冲销而更正同时提交时，立即回退优先、更正链接其后；消费方任意时刻只读到
+  一个有来源且已确认的版本，全部版本留档可复查；
+- 去重管理依据已结算的冲销对账批确认已撤回的发布标识；
+- 重放提交记录可重建槽位清单并回写，核对原批与更正批的实际写入。
+
+归档目录默认为 `backend/data/slot_reversal/`（`app.config.settings.slot_archive_dir`）。
+验收测试覆盖交错送达的冲销与更正回执及一次落盘失败：
+
+```bash
+cd backend && .venv/bin/python -m pytest tests/test_slot_reversal.py
+```
 
 领域：数据工程
 子方向：数仓与数据湖

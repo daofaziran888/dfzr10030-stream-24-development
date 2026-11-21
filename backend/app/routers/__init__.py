@@ -24,5 +24,6 @@ from app.routers import metric_calc as router_metric_calc
 from app.routers import event_router as router_event_router
 from app.routers import replay_batch as router_replay_batch
 from app.routers import grp_partition as router_grp_partition
+from app.routers import slot_reversal as router_slot_reversal
 
-ROUTERS = [router_source_binding, router_cdc_task, router_stream_transform, router_window_agg, router_state_store, router_rule_engine, router_watermark_mgr, router_sink_writer, router_backpressure, router_checkpoint, router_data_quality, router_schema_evolve, router_pipeline_orch, router_dedup_mgr, router_metric_calc, router_event_router, router_replay_batch, router_grp_partition]
+ROUTERS = [router_source_binding, router_cdc_task, router_stream_transform, router_window_agg, router_state_store, router_rule_engine, router_watermark_mgr, router_sink_writer, router_backpressure, router_checkpoint, router_data_quality, router_schema_evolve, router_pipeline_orch, router_dedup_mgr, router_metric_calc, router_event_router, router_replay_batch, router_grp_partition, router_slot_reversal]

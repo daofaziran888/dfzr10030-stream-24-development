@@ -17,6 +17,7 @@ class Settings:
     )
     page_size_default: int = 20
     page_size_max: int = 200
+    slot_archive_dir: str = "data/slot_reversal"  # 槽位更正回退的数据归档目录
 
 
 settings = Settings()

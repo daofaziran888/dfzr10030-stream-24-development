@@ -63,3 +63,10 @@ class DedupMgrService:
         entry["pending"] = target != STATUS_ORDER[-1]
         entry["abnormal"] = action in NEGATIVE_ACTIONS
         return entry, f"去重策略已{action}"
+
+    def confirm_withdrawn(self, publish_id: str, ledger=None) -> bool:
+        """依据槽位冲销对账批确认发布标识是否已撤回，撤回的标识不再放行重复结算。"""
+        if ledger is None:
+            from app.services.slot_reversal import shared_service
+            ledger = shared_service.ledger
+        return publish_id in ledger.withdrawn_publishes()
